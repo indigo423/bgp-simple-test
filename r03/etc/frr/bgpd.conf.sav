@@ -1,0 +1,27 @@
+!
+! Zebra configuration saved from vty
+!   2019/10/16 16:25:48
+!
+frr version 7.1_git302403850332
+frr defaults traditional
+!
+hostname r03
+!
+!
+!
+router bgp 65537
+ bgp router-id 172.16.42.105
+ neighbor 172.16.101.5 remote-as 65536
+ neighbor 172.16.101.5 ebgp-multihop 255
+ !
+ address-family ipv4 unicast
+  network 10.1.42.0/24
+  network 10.1.43.0/24
+  network 10.1.44.0/24
+ exit-address-family
+!
+!
+agentx
+!
+line vty
+!

@@ -1,0 +1,116 @@
+---
+version: '3.7'
+
+networks:
+  r01-as65536-p1:
+    ipam:
+      config:
+        - subnet: 10.1.23.0/24
+  r01-as65536-p2:
+    ipam:
+      config:
+        - subnet: 10.1.24.0/24
+  r01-as65536-p3:
+    ipam:
+      config:
+        - subnet: 10.1.25.0/24
+  r01-r02:
+    ipam:
+      config:
+        - subnet: 172.16.101.0/29
+  r02-r03:
+    ipam:
+      config:
+        - subnet: 172.16.102.0/29
+  r03-as65537-p1:
+    ipam:
+      config:
+        - subnet: 10.1.42.0/24
+  r03-as65537-p2:
+    ipam:
+      config:
+        - subnet: 10.1.43.0/24
+  r03-as65537-p3:
+    ipam:
+      config:
+        - subnet: 10.1.44.0/24
+  router-mgmt:
+    ipam:
+      config:
+        - subnet: 172.16.42.0/24
+
+services:
+  r01:
+    image: opennms/frrouting:7.1
+    container_name: r01
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv4.ip_forward=1
+      - net.ipv6.route.max_size=131072
+    cap_add:
+      - ALL
+    volumes:
+      - ./r01/etc/frr:/etc/frr
+    networks:
+      router-mgmt:
+        ipv4_address: 172.16.42.101
+      r01-r02:
+        ipv4_address: 172.16.101.5
+      r01-as65536-p1:
+        ipv4_address: 10.1.23.101
+      r01-as65536-p2:
+        ipv4_address: 10.1.24.101
+      r01-as65536-p3:
+        ipv4_address: 10.1.25.101
+    ports:
+      - "17681:7681/tcp"
+
+  r02:
+    image: opennms/frrouting:7.1
+    container_name: r02
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv4.ip_forward=1
+      - net.ipv6.route.max_size=131072
+    cap_add:
+      - ALL
+    volumes:
+      - ./r02/etc/frr:/etc/frr
+    networks:
+      router-mgmt:
+        ipv4_address: 172.16.42.102
+      r01-r02:
+        ipv4_address: 172.16.101.6
+      r02-r03:
+        ipv4_address: 172.16.102.5
+
+    ports:
+      - "27681:7681/tcp"
+
+  r03:
+    image: opennms/frrouting:7.1
+    container_name: r03
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv6.conf.all.forwarding=1
+      - net.ipv4.ip_forward=1
+      - net.ipv6.route.max_size=131072
+    cap_add:
+      - ALL
+    volumes:
+      - ./r03/etc/frr:/etc/frr
+    networks:
+      router-mgmt:
+        ipv4_address: 172.16.42.103
+      r02-r03:
+        ipv4_address: 172.16.102.6
+      r03-as65537-p1:
+        ipv4_address: 10.1.42.103
+      r03-as65537-p2:
+        ipv4_address: 10.1.43.103
+      r03-as65537-p3:
+        ipv4_address: 10.1.44.103
+    ports:
+      - "57681:7681/tcp"

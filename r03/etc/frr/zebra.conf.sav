@@ -1,0 +1,22 @@
+!
+! Zebra configuration saved from vty
+!   2019/10/16 16:25:48
+!
+frr version 7.1_git302403850332
+frr defaults traditional
+!
+hostname r03
+password zebra
+enable password zebra
+!
+!
+!
+!
+agentx
+!
+router-id 172.16.42.103
+!
+!
+!
+line vty
+!

@@ -1,0 +1,14 @@
+!
+! Zebra configuration saved from vty
+!   2019/10/16 16:25:54
+!
+frr version 7.1_git302403850332
+frr defaults traditional
+!
+hostname aaa05c638384
+!
+!
+!
+ip route 10.1.42.0/24 172.16.104.6
+line vty
+!
